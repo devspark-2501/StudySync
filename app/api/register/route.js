@@ -28,6 +28,7 @@ export async function POST(req) {
 
     return NextResponse.json({ message: 'User registered successfully', userId: newUser._id }, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+    console.error('Registration Error Details:', error); // <--- This will print the exact issue in VS Code terminal
+    return NextResponse.json({ message: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }
