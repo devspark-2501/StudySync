@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import ContributionGraph from '@/components/ContributionGraph';
 import { User, Edit2, Check, Plus, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function DashboardPage() {
   const [userData, setUserData] = useState(null);
@@ -60,51 +61,74 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#bde0fe] via-[#e3f2fd] to-[#ffffff]">
-        <p className="text-slate-600 text-sm font-medium">Loading profile...</p>
+        <motion.p 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ repeat: Infinity, repeatType: 'reverse', duration: 0.8 }}
+          className="text-slate-600 text-sm font-medium"
+        >
+          Loading profile...
+        </motion.p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen w-full relative bg-gradient-to-b from-[#bde0fe] via-[#e3f2fd] to-[#ffffff] overflow-x-hidden p-6 pl-24 sm:pl-28">
-      {/* Background Radial Effects */}
+    <div className="min-h-screen w-full relative bg-gradient-to-b from-[#bde0fe] via-[#e3f2fd] to-[#ffffff] overflow-x-hidden p-4 sm:p-6 pb-24 md:pb-6 md:pl-28">
+      {/* Background Radial Rings */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-30">
-        <div className="w-[800px] h-[800px] rounded-full border border-white/60 absolute" />
+        <div className="w-[600px] sm:w-[800px] h-[600px] sm:h-[800px] rounded-full border border-white/60 absolute" />
       </div>
 
       <Sidebar />
 
-      <main className="max-w-5xl mx-auto space-y-8 relative z-10 pt-4">
+      <main className="max-w-5xl mx-auto space-y-6 sm:space-y-8 relative z-10 pt-2 sm:pt-4">
         {/* Top Header Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-          {/* Left Top: Profile Picture & Basic Info */}
-          <div className="bg-white/70 backdrop-blur-xl border border-white/80 rounded-3xl p-6 shadow-xl flex flex-col items-center text-center">
-            <div className="w-24 h-24 rounded-full bg-slate-100 border-2 border-white shadow-md flex items-center justify-center mb-4 text-slate-500 overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 items-start">
+          
+          {/* Profile Card */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.5, type: 'spring', stiffness: 180 }}
+            className="bg-white/70 backdrop-blur-xl border border-white/80 rounded-3xl p-6 shadow-xl flex flex-col items-center text-center"
+          >
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-slate-100 border-2 border-white shadow-md flex items-center justify-center mb-4 text-slate-500 overflow-hidden"
+            >
               {userData?.avatarUrl ? (
                 <img src={userData.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
               ) : (
-                <User className="w-12 h-12 text-slate-400" />
+                <User className="w-10 h-10 sm:w-12 sm:h-12 text-slate-400" />
               )}
-            </div>
-            <h2 className="text-xl font-bold text-slate-800">{userData?.name || 'Student User'}</h2>
-            <p className="text-xs text-slate-500 mb-4">{userData?.email}</p>
+            </motion.div>
+            
+            <h2 className="text-lg sm:text-xl font-bold text-slate-800">{userData?.name || 'Student User'}</h2>
+            <p className="text-xs text-slate-500 mb-4 truncate max-w-[200px]">{userData?.email}</p>
 
-            <button
+            <motion.button
+              whileTap={{ scale: 0.95 }}
               onClick={handleLogActivity}
               className="w-full bg-[#1a1b26] hover:bg-black text-white py-2.5 rounded-xl text-xs font-medium flex items-center justify-center space-x-1.5 transition-all shadow-md"
             >
               <Plus className="w-4 h-4" />
               <span>Log Task / Activity</span>
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
 
-          {/* Right Side: Editable About / Bio Section */}
-          <div className="md:col-span-2 bg-white/70 backdrop-blur-xl border border-white/80 rounded-3xl p-6 shadow-xl relative min-h-[220px] flex flex-col justify-between">
+          {/* About / Bio Section */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1, type: 'spring', stiffness: 180 }}
+            className="md:col-span-2 bg-white/70 backdrop-blur-xl border border-white/80 rounded-3xl p-6 shadow-xl relative min-h-[220px] flex flex-col justify-between"
+          >
             <div>
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center space-x-2">
                   <Sparkles className="w-4 h-4 text-sky-600" />
-                  <h3 className="text-base font-bold text-slate-800">About Me</h3>
+                  <h3 className="text-sm sm:text-base font-bold text-slate-800">About Me</h3>
                 </div>
                 {isEditing ? (
                   <button
@@ -129,7 +153,7 @@ export default function DashboardPage() {
                 <textarea
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
-                  className="w-full h-32 p-3 bg-slate-100/70 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400/50 resize-none"
+                  className="w-full h-28 p-3 bg-slate-100/70 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400/50 resize-none"
                   placeholder="Tell us about your learning goals and projects..."
                 />
               ) : (
@@ -147,11 +171,10 @@ export default function DashboardPage() {
                 </span>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
-
-        {/* Bottom Section: Contribution Graph */}
+        {/* Contribution Graph Component */}
         <ContributionGraph activities={userData?.activities || []} />
       </main>
     </div>
