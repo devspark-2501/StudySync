@@ -50,10 +50,13 @@ export async function PUT(req) {
     const { taskId, date, status } = await req.json();
     await connectDB();
 
+    const user = await User.findOne({ email: session.user.email });
     const task = await Task.findById(taskId);
     if (!task) return NextResponse.json({ message: 'Task not found' }, { status: 404 });
 
     const existingLogIndex = task.logs.findIndex((l) => l.date === date);
+    const prevStatus = existingLogIndex > -1 ? task.logs[existingLogIndex].status : 'pending';
+
     if (existingLogIndex > -1) {
       task.logs[existingLogIndex].status = status;
     } else {
@@ -61,7 +64,22 @@ export async function PUT(req) {
     }
 
     await task.save();
-    return NextResponse.json({ task }, { status: 200 });
+
+    // Sync Contribution Activity for user
+    const actIdx = user.activities.findIndex((a) => a.date === date);
+    if (status === 'completed' && prevStatus !== 'completed') {
+      if (actIdx > -1) {
+        user.activities[actIdx].count += 1;
+      } else {
+        user.activities.push({ date, count: 1 });
+      }
+    } else if (prevStatus === 'completed' && status !== 'completed' && actIdx > -1) {
+      user.activities[actIdx].count = Math.max(0, user.activities[actIdx].count - 1);
+    }
+
+    await user.save();
+
+    return NextResponse.json({ task, activities: user.activities }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
