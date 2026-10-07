@@ -29,7 +29,7 @@ export default function Sidebar() {
       </Link>
 
       <Link
-        href="/dashboard"
+        href="/tasks"
         className={`p-2.5 sm:p-3 rounded-full transition-all ${
           pathname === '/tasks'
             ? 'bg-[#1a1b26] text-white shadow-md scale-105'
