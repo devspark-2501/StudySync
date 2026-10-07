@@ -150,6 +150,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
+
         {/* Bottom Section: Contribution Graph */}
         <ContributionGraph activities={userData?.activities || []} />
       </main>
