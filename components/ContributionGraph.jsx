@@ -1,12 +1,12 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 
 export default function ContributionGraph({ activities = [] }) {
   const activityMap = new Map();
   activities.forEach((act) => activityMap.set(act.date, act.count));
 
-  // Generate last 365 days dates
   const days = [];
   const today = new Date();
   for (let i = 364; i >= 0; i--) {
@@ -30,23 +30,28 @@ export default function ContributionGraph({ activities = [] }) {
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="w-full bg-white/70 backdrop-blur-xl border border-white/80 rounded-3xl p-6 shadow-xl">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-base font-bold text-slate-800">
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.95, y: 30 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.2, type: 'spring', stiffness: 150 }}
+      className="w-full bg-white/70 backdrop-blur-xl border border-white/80 rounded-3xl p-4 sm:p-6 shadow-xl"
+    >
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-1">
+        <h3 className="text-sm sm:text-base font-bold text-slate-800">
           Contribution Activity ({currentYear})
         </h3>
         <span className="text-xs text-slate-500">Last 365 Days</span>
       </div>
 
-      <div className="overflow-x-auto pb-2">
-        <div className="grid grid-rows-7 grid-flow-col gap-1.5 min-w-[700px]">
+      <div className="overflow-x-auto pb-2 scrollbar-thin">
+        <div className="grid grid-rows-7 grid-flow-col gap-1.5 min-w-[650px] p-1">
           {days.map((day, idx) => (
-            <div
+            <motion.div
               key={idx}
+              whileHover={{ scale: 1.5, zIndex: 10 }}
+              transition={{ type: 'spring', stiffness: 300 }}
               title={`${day.date}: ${day.count} contributions`}
-              className={`w-3.5 h-3.5 rounded-sm transition-all hover:scale-125 ${getColor(
-                day.count
-              )}`}
+              className={`w-3.5 h-3.5 rounded-sm cursor-pointer ${getColor(day.count)}`}
             />
           ))}
         </div>
@@ -60,6 +65,6 @@ export default function ContributionGraph({ activities = [] }) {
         <div className="w-3 h-3 rounded-sm bg-sky-600" />
         <span>More</span>
       </div>
-    </div>
+    </motion.div>
   );
 }
