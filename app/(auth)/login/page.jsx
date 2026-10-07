@@ -32,7 +32,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen w-full relative flex flex-col items-center justify-between bg-gradient-to-b from-[#bde0fe] via-[#e3f2fd] to-[#ffffff] overflow-hidden px-4 sm:px-8 py-8 sm:py-10">
       
-      {/* Top Header with Clickable Logo */}
+      {/* Clickable Header Logo -> Points to Landing Page (page.js) */}
       <header className="relative z-10 w-full max-w-5xl flex items-center justify-between">
         <Link 
           href="/" 
@@ -47,7 +47,7 @@ export default function LoginPage() {
         </Link>
       </header>
 
-      {/* Main Login Card */}
+      {/* Login Card */}
       <div className="relative z-10 w-full max-w-md bg-white/70 backdrop-blur-xl border border-white/80 p-8 rounded-3xl shadow-xl my-auto">
         <div className="flex flex-col items-center text-center">
           <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4 border border-slate-100">
@@ -107,7 +107,6 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="relative z-10 text-xs text-slate-500">
         &copy; {new Date().getFullYear()} StudySync. All rights reserved.
       </footer>
