@@ -26,6 +26,7 @@ export async function POST(req) {
       password: hashedPassword,
     });
 
+    
     return NextResponse.json({ message: 'User registered successfully', userId: newUser._id }, { status: 201 });
   } catch (error) {
     console.error('Registration Error Details:', error); // <--- This will print the exact issue in VS Code terminal
